@@ -742,10 +742,18 @@ function generateFunctionsForModule(module, displayName) {
 		return output;
 	}
 
-	function generateFunction(classname, constructor) {
-		var output = '.. js:func:: ' + classname + '.' + generateFunctionString(constructor) + '\n';
-			output += generateFunctionDescription(constructor);
-			output += generateFunctionOutput(constructor);
+	function generateFunction(classname, fn) {
+		var output = '.. js:func:: ' + classname + '.' + generateFunctionString(fn) + '\n';
+			output += generateFunctionDescription(fn);
+			output += generateFunctionOutput(fn);
+		return output;
+	}
+
+	function generateMember(classname, member) {
+		console.log(member);
+		var output = '.. js:attr:: ' + classname + '.' + member.name + '\n\n';
+			output += '   ' + member.value;
+			output += (member.type ? '\n\n   :type: ' + member.type.toLowerCase() + ' ' : '');
 		return output;
 	}
 
@@ -786,14 +794,8 @@ function generateFunctionsForModule(module, displayName) {
 		out += generateClass(classname, constructor);
 		
 		if (klass.members.length) {
-			out += generateStrong('Members', true);
 			for (var j = 0; j < klass.members.length; j++) {
-				var member = klass.members[j];
-				out += generateStrong(member.name);
-				if (member.type) {
-					out += ':  ' + generateEm(member.type);
-				}
-				out += ',  ' + generateText(member.value, true);
+				out += '\n\n' + generateMember(classname, klass.members[j]);
 			}
 		}
 
