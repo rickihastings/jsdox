@@ -695,8 +695,9 @@ function generateFunctionString(fn) {
 		for (var i = 0, len = fn.params.length; i < len; i++) {
 			var param = fn.params[i],
 				last = ((i + 1) === len);
+
 			if (param.optional) {
-				paramString += (last ? ', ' : '[, ') + param.name.substring(1, param.name.length - 1);
+				paramString += (hasOptional ? ', ' : '[, ') + param.name.substring(1, param.name.length - 1);
 				hasOptional = true;
 			} else {
 				paramString += (i == 0 ? '' : ', ') + param.name;
