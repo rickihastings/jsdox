@@ -88,6 +88,7 @@ var TAGS = {
 	"since": parseText,
 	"summary": parseText,
 	"this": parseName,
+	"todo": parseName,
 	"type": parseType,
 	"version": parseText,
 	"title": parseText
@@ -336,7 +337,7 @@ function parseComments(ast) {
 					var comment = comments[i];
 					if (comment.type === 'comment2') {
 						var parsed = parseComment(comment.value, comment.line, parseLine);
-						if (parsed) {
+						if (parsed) {		
 							saveFunctionOrMethodName(fname, parsed);
 							result.push(parsed);
 						}
@@ -574,6 +575,7 @@ function analyze(raw) {
 					fn.params = [];
 					fn.returns = '';
 					fn.version = '';
+					fn.todo = '';
 					fn.description = comment.text;
 					fn.internal =  isInternal(fn.name);
 					current_function = fn;
@@ -747,14 +749,14 @@ function generateFunctionsForModule(module, displayName) {
 	}
 
 	function generateFunction(classname, fn) {
-		var output = '.. js:func:: ' + classname + '.' + generateFunctionString(fn) + '\n';
+		var output = '.. js:function:: ' + classname + '.' + generateFunctionString(fn) + '\n';
 			output += generateFunctionDescription(fn);
 			output += generateFunctionOutput(fn);
 		return output;
 	}
 
 	function generateMember(classname, member) {
-		var output = '.. js:attr:: ' + classname + '.' + member.name + '\n\n';
+		var output = '.. js:attribute:: ' + classname + '.' + member.name + '\n\n';
 			output += '   ' + member.value;
 			output += (member.type ? '\n\n   :type: ' + member.type.toLowerCase() + ' ' : '');
 		return output;
