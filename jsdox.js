@@ -689,27 +689,31 @@ function generateEm(text, nl) {
 function generateFunctionString(fn) {
 	var paramString = '',
 		hasOptional = false;
-	for (var i = 0, len = fn.params.length; i < len; i++) {
-		var param = fn.params[i],
-			last = ((i + 1) === len);
-		if (param.optional) {
-			paramString += (last ? ', ' : '[, ') + param.name.substring(1, param.name.length - 1);
-			hasOptional = true;
-		} else {
-			paramString += (i == 0 ? '' : ', ') + param.name;
+	if (fn.params) {
+		for (var i = 0, len = fn.params.length; i < len; i++) {
+			var param = fn.params[i],
+				last = ((i + 1) === len);
+			if (param.optional) {
+				paramString += (last ? ', ' : '[, ') + param.name.substring(1, param.name.length - 1);
+				hasOptional = true;
+			} else {
+				paramString += (i == 0 ? '' : ', ') + param.name;
+			}
 		}
-	}
-	if (hasOptional) {
-		paramString += ']';
+		if (hasOptional) {
+			paramString += ']';
+		}
 	}
 	return fn.name + '(' + paramString + ')';
 }
 
 function generateFunctionOutput(fn) {
 	var output = '\n';
-	for (var i = 0, len = fn.params.length; i < len; i++) {
-		var param = fn.params[i];
-		output += '   :param ' + param.type.toLowerCase() + ' ' + param.name + ': ' + (param.value || '') + '\n';
+	if (fn.params) {
+		for (var i = 0, len = fn.params.length; i < len; i++) {
+			var param = fn.params[i];
+			output += '   :param ' + param.type.toLowerCase() + ' ' + param.name + ': ' + (param.value || '') + '\n';
+		}
 	}
 	if (fn.returns) {
 		output += '   :returns: ' + fn.returns;
@@ -750,7 +754,6 @@ function generateFunctionsForModule(module, displayName) {
 	}
 
 	function generateMember(classname, member) {
-		console.log(member);
 		var output = '.. js:attr:: ' + classname + '.' + member.name + '\n\n';
 			output += '   ' + member.value;
 			output += (member.type ? '\n\n   :type: ' + member.type.toLowerCase() + ' ' : '');
